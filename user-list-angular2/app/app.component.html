@@ -1,0 +1,69 @@
+<div class="content">
+	<div class="filterBlock">
+		Поиск по ФИО: <input type="text" class="form-control filterInput" (keyup)="findFio($event)" placeholder="Ф.И.О." [(ngModel)]="filterName" />
+  	</div>
+  	<div style="font-weight: bold;text-align:center;">Новый пользователь</div>
+	<table class="table table-bordered">
+		<tr>
+			<td style="width: 35%;">
+				<input class="form-control" type="text" [(ngModel)]="newUser.fio" #fio="ngModel" required="required" />
+				<span *ngIf="!fio.valid && !fio.untouched" class="label label-danger">Поле не может быть пустым</span>
+			</td>
+			<td style="width: 35%;">
+				<input class="form-control" type="text" [(ngModel)]="newUser.phone" #phone="ngModel" pattern="^(\+\d{1})(\(\d{3}\))(\d{7})$" placeholder="+7(111)1234567" required="required" />
+				<span *ngIf="!phone.valid && !phone.untouched" class="label label-danger">Введите телефон в формате +7(111)1234567</span>
+			</td>
+			<td style="width: 30%;">
+				<select class="form-control" #country="ngModel" [(ngModel)]="newUser.country.id" required="required">
+					<option *ngFor="let country of countries" [value]="country.id">{{country.name}}</option>
+				</select>
+				<span *ngIf="!country.valid && !country.untouched" class="label label-danger">Поле не может быть пустым</span>
+			</td>
+		</tr>
+	</table>
+	<div class="newUserButton">
+		<button class="btn btn-success btn-sm" (click)="saveNewUser(fio,phone,country)"  [disabled]="fio.invalid || phone.invalid || country.invalid">Добавить пользователя</button>
+	</div>
+
+	<table class="table table-bordered">
+		<thead style="font-weight: bold;">
+			<tr>
+				<td>
+					Ф.И.О. 
+					<span (click)="sortBy()" class="sort" title="Сортировка">
+						<i *ngIf="!sort" class="glyphicon glyphicon-sort-by-alphabet"></i>
+						<i *ngIf="sort" class="glyphicon glyphicon-sort-by-alphabet-alt"></i>
+					</span>
+				</td>
+				<td>Телефон</td>
+				<td>Страна</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let user of users">
+				<td style="width: 35%;">
+					<input class="form-control" type="text" [ngModel]="user.fio" #fio="ngModel" required="required" />
+					<span *ngIf="!fio.valid" class="label label-danger">Поле не может быть пустым</span>
+					<div *ngIf="fio.valid && fio.value != user.fio" class="saveBlock">
+						<button class="btn btn-success btn-xs" (click)="saveFIO(user, fio.value)">Сохранить</button>
+					</div>
+				</td>
+				<td style="width: 35%;">
+					<input class="form-control" type="text" [ngModel]="user.phone" #phone="ngModel" pattern="^(\+\d{1})(\(\d{3}\))(\d{7})$" placeholder="+7(111)1234567" required="required" />
+					<span *ngIf="!phone.valid" class="label label-danger">Введите телефон в формате +7(111)1234567</span>
+					<div *ngIf="phone.valid && phone.value != user.phone" class="saveBlock">
+						<button class="btn btn-success btn-xs" (click)="savePhone(user, phone.value)">Сохранить</button>
+					</div>
+				</td>
+				<td style="width: 30%;">
+					<select class="form-control" #country="ngModel" [ngModel]="user.country.id" required="required">
+						<option *ngFor="let country of countries" [value]="country.id">{{country.name}}</option>
+					</select>
+					<div *ngIf="country.valid && country.value != user.country.id" class="saveBlock">
+						<button class="btn btn-success btn-xs" (click)="saveCountry(user, country.value)">Сохранить</button>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
